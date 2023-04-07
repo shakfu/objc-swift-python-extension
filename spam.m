@@ -7,8 +7,8 @@
 //
 
 #include "spam.h"
-#include <Python/Python.h>
-#include <Python/structmember.h>
+#include <Python.h>
+//#include <Python/structmember.h>
 
 #import "spam-Swift.h"
 
@@ -84,7 +84,7 @@ static PyGetSetDef Counter_getsetters[] = {
 
 static PyObject *
 Counter_repr(spam_CounterObject *self) {
-    return PyString_FromFormat("<spam.Counter; count:%i>", (long)[self->instance count]);
+    return PyUnicode_FromFormat("<spam.Counter; count:%i>", (long)[self->instance count]);
 }
 
 static PyTypeObject spam_CounterType = {
@@ -142,18 +142,28 @@ static PyMethodDef SpamMethods[] = {
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 
+static struct PyModuleDef spammodule = {
+    PyModuleDef_HEAD_INIT,
+    "spam",   /* name of module */
+    "An example Python C extension module.", /* module documentation, may be NULL */
+    -1,       /* size of per-interpreter state of the module,
+                 or -1 if the module keeps state in global variables. */
+    SpamMethods
+};
+
+
 PyMODINIT_FUNC
-initspam(void)
+PyInit_spam(void)
 {
     PyObject *m;
     
     if (PyType_Ready(&spam_CounterType) < 0) {
-        return;
+        return NULL;
     }
 
-    m = Py_InitModule("spam", SpamMethods);
+    m = PyModule_Create(&spammodule);
     if (m == NULL)
-        return;
+        return NULL;
 
     SpamError = PyErr_NewException("spam.error", NULL, NULL);
     Py_INCREF(SpamError);
@@ -161,4 +171,5 @@ initspam(void)
     
     Py_INCREF(&spam_CounterType);
     PyModule_AddObject(m, "Counter", (PyObject *)&spam_CounterType);
+    return m;
 }

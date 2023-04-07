@@ -1,4 +1,5 @@
 # objc-swift-python-extension
+
 An experiment in building macOS Python (.so) extensions containing Swift code
 
 This is an Xcode project which builds a compiled Python extension on macOS containing Swift code.
@@ -8,16 +9,15 @@ This is an Xcode project which builds a compiled Python extension on macOS conta
 Open `spam.xcodeproj` in Xcode and build; then, in a terminal, change to the directory containing the built product `spam.so` (type `cd `, drag `spam.so` from the Xcode Products folder to the terminal, and backspace over `spam.so` leaving only its directory); then start Python:
 
 ```
-% python
-Python 2.7.16 (default, Jan 27 2020, 04:46:15)
-[GCC 4.2.1 Compatible Apple LLVM 10.0.1 (clang-1001.0.37.14)] on darwin
+$ python3
+Python 3.11.2 (main, Feb 16 2023, 03:15:23) [Clang 14.0.0 (clang-1400.0.29.202)] on darwin
 Type "help", "copyright", "credits" or "license" for more information.
->>> import  spam
+>>> import spam
 >>> spam.add(3,4)
 This is in Swift
 7
->>>  c = spam.Counter()
->>>  c
+>>> c = spam.Counter()
+>>> c
 <spam.Counter; count:0>
 >>> c.increment()
 >>> c.count
@@ -38,7 +38,5 @@ As such, the approach used here is to define an Objective C-based class named `G
 ## Known issues
 
 Attempting to load the compiled module after copying it to `/tmp` may fail with a code signing error,
-
-This code currently only supports Python 2.7, as it was developed on macOS 10.14 where this is the system Python version.  Adapting it to Python 3 should not be difficult.
 
 
